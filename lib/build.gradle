@@ -8,7 +8,7 @@ group = "com.github.RogaLabs"
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "24.0.0 rc2"
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         minSdkVersion 15
