@@ -8,6 +8,5 @@
 /build
 /captures
 app/
-lib/google-services.json
 lib/.gitignore
 lib/src/androidTest
