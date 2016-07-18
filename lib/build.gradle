@@ -64,18 +64,22 @@ task addGoogleServirceJsonFile(type: Copy) {
 
     def jsonSlurper = new JsonSlurper()
     def googleJson = file("${appDir}/${googleServicesJson}")
-    def object = jsonSlurper.parseText(googleJson.text)
 
-    assert object instanceof Map
-    object.client[0].client_info.android_client_info.package_name = "${packageName}"
-    object.client[0].oauth_client[0].android_info.package_name    = "${packageName}"
+    if (googleJson.exists()) {
 
-    def output = JsonOutput.toJson(object)
-    def newFile = new File("${appModuleLibFolder}${googleServicesJson}")
-    newFile.write(output)
+        def object = jsonSlurper.parseText(googleJson.text)
 
-    from(newFile) {
-        destinationDir = newFile
+        assert object instanceof Map
+        object.client[0].client_info.android_client_info.package_name = "${packageName}"
+        object.client[0].oauth_client[0].android_info.package_name = "${packageName}"
+
+        def output = JsonOutput.toJson(object)
+        def newFile = new File("${appModuleLibFolder}${googleServicesJson}")
+        newFile.write(output)
+
+        from(newFile) {
+            destinationDir = newFile
+        }
     }
 }
 
