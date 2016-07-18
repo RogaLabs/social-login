@@ -2,7 +2,9 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.github.dcendents.android-maven'
 
+group = "com.github.RogaLabs"
 
 android {
     compileSdkVersion 23
