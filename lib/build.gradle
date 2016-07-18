@@ -1,0 +1,84 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "24.0.0 rc2"
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.google.android.gms:play-services-auth:9.0.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.+'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+
+
+buildscript {
+    ext.kotlin_version = '1.0.1-2'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+repositories {
+    mavenCentral()
+}
+
+
+import groovy.json.JsonSlurper
+import groovy.json.JsonOutput
+
+def appModuleLibFolder = './lib/'
+def appDir = '../app'
+def googleServicesJson = 'google-services.json'
+def packageName = 'com.rogalabs.lib'
+
+task addGoogleServirceJsonFile(type: Copy) {
+
+    description = 'get your google service json file'
+
+    def jsonSlurper = new JsonSlurper()
+    def googleJson = file("${appDir}/${googleServicesJson}")
+    def object = jsonSlurper.parseText(googleJson.text)
+
+    assert object instanceof Map
+    object.client[0].client_info.android_client_info.package_name = "${packageName}"
+    object.client[0].oauth_client[0].android_info.package_name    = "${packageName}"
+
+    def output = JsonOutput.toJson(object)
+    def newFile = new File("${appModuleLibFolder}${googleServicesJson}")
+    newFile.write(output)
+
+    from(newFile) {
+        destinationDir = newFile
+    }
+}
+
+
+afterEvaluate {
+    processDebugGoogleServices.dependsOn addGoogleServirceJsonFile
+    processReleaseGoogleServices.dependsOn addGoogleServirceJsonFile
+}
