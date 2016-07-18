@@ -1,0 +1,41 @@
+{
+  "client": [{
+    "api_key": [{
+      "current_key": "fake"
+    }],
+    "client_info": {
+      "android_client_info": {
+        "package_name": "com.rogalabs.lib"
+      },
+      "mobilesdk_app_id": "fake"
+    },
+    "oauth_client": [{
+      "android_info": {
+        "certificate_hash": "fake",
+        "package_name": "com.rogalabs.lib"
+      },
+      "client_id": "fake",
+      "client_type": 1
+    }, {
+      "client_id": "fake",
+      "client_type": 3
+    }],
+    "services": {
+      "ads_service": {
+        "status": 1
+      },
+      "analytics_service": {
+        "status": 1
+      },
+      "appinvite_service": {
+        "other_platform_oauth_client": [],
+        "status": 1
+      }
+    }
+  }],
+  "configuration_version": "1",
+  "project_info": {
+    "project_id": "fake",
+    "project_number": "fake"
+  }
+}
