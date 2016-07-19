@@ -16,6 +16,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInResult
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
+import com.rogalabs.lib.facebook.LoginFacebookPresenter
+import com.rogalabs.lib.google.LoginGooglePresenter
 import java.util.*
 
 /**
@@ -24,12 +26,12 @@ import java.util.*
 open class LoginView : AppCompatActivity(),  LoginContract.View {
 
     private var mainLayout: FrameLayout? = null
-    private var googlePresenter: LoginGooglePresenter? = null
-    private var facebookPresenter: LoginFacebookPresenter? = null
+    private var googlePresenter: LoginContract.GooglePresenter? = null
+    private var facebookPresenter: LoginContract.FacebookPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        inject()
+        injectPresenter(LoginGooglePresenter(this), LoginFacebookPresenter(this))
     }
 
     override fun onStart() {
@@ -38,9 +40,9 @@ open class LoginView : AppCompatActivity(),  LoginContract.View {
         facebookPresenter?.start(this)
     }
 
-    override fun inject(){
-        googlePresenter = LoginGooglePresenter(this)
-        facebookPresenter = LoginFacebookPresenter(this)
+    override fun onDestroy() {
+        super.onDestroy()
+        googlePresenter?.destroy()
     }
 
     override fun setContentView(@LayoutRes layoutResID: Int) {
@@ -57,6 +59,17 @@ open class LoginView : AppCompatActivity(),  LoginContract.View {
         facebookPresenter?.activityResult(requestCode, resultCode, data)
     }
 
+    override fun injectPresenter(googlePresenter: LoginGooglePresenter, facebookPresenter: LoginFacebookPresenter) {
+        this.googlePresenter   = googlePresenter
+        this.facebookPresenter = facebookPresenter
+    }
+
+
+    override fun hideProgress() {
+    }
+
+    override fun showProgress() {
+    }
 
     protected fun loginWithGoogle(callback: Callback) {
         googlePresenter?.signIn(callback)
