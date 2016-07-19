@@ -1,10 +1,8 @@
 package com.rogalabs.lib.facebook
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
-import android.util.Log
 import com.facebook.*
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
@@ -33,6 +31,9 @@ class LoginFacebookPresenter(val view: LoginContract.View) : LoginContract.Faceb
         this.activity = activity
         callbackManager  = com.facebook.CallbackManager.Factory.create()
         registerFacebookCallback(callbackManager)
+    }
+
+    override fun destroy() {
     }
 
     private fun registerFacebookCallback(callbackManager: CallbackManager?){
@@ -76,10 +77,10 @@ class LoginFacebookPresenter(val view: LoginContract.View) : LoginContract.Faceb
     }
 
     private fun buildSocialUser(jsonObject: JSONObject?) : SocialUser {
-        Log.d("BBBBBBBBBBb",jsonObject.toString())
         val user: SocialUser = SocialUser(jsonObject?.getString("id"),
                 jsonObject?.getString("name"), jsonObject?.getString("email"),
-                Uri.parse(userPicture(jsonObject?.getString("id"))))
+                userPicture(jsonObject?.getString("id")),
+                AccessToken.getCurrentAccessToken().token)
         return user
     }
 
