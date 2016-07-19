@@ -1,4 +1,4 @@
-package com.rogalabs.lib
+package com.rogalabs.lib.google
 
 import android.content.Intent
 import android.support.v4.app.FragmentActivity
@@ -7,12 +7,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInResult
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
+import com.rogalabs.lib.Callback
+import com.rogalabs.lib.LoginContract
 import com.rogalabs.lib.LoginContract.GooglePresenter
+import com.rogalabs.lib.SocialUser
 
 /**
  * Created by roga on 13/07/16.
  */
-class LoginGooglePresenter(val view: LoginContract.View?) : GooglePresenter , GoogleApiClient.OnConnectionFailedListener{
+class LoginGooglePresenter(val view: LoginContract.View?) : GooglePresenter, GoogleApiClient.OnConnectionFailedListener {
 
     private var mGoogleApiClient: GoogleApiClient? = null
     private var activity: FragmentActivity? = null
@@ -39,8 +42,10 @@ class LoginGooglePresenter(val view: LoginContract.View?) : GooglePresenter , Go
     private fun  handleSignInResult(result: GoogleSignInResult?) {
         if (result?.isSuccess!!) {
             val acct = result?.signInAccount
-            val user = SocialUser(acct?.id, acct?.displayName, acct?.email, acct?.photoUrl)
+            val user = SocialUser(acct?.id, acct?.displayName, acct?.email, acct?.photoUrl.toString() , acct?.idToken)
             callback?.onSuccess(user)
+        } else {
+            callback?.onError(Exception("Problem on google login"))
         }
     }
 

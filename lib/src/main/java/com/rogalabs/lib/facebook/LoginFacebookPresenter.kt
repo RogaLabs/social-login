@@ -1,12 +1,16 @@
-package com.rogalabs.lib
+package com.rogalabs.lib.facebook
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
+import android.util.Log
 import com.facebook.*
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
+import com.rogalabs.lib.Callback
+import com.rogalabs.lib.LoginContract
+import com.rogalabs.lib.SocialUser
 import org.json.JSONObject
 import java.util.*
 
@@ -27,7 +31,7 @@ class LoginFacebookPresenter(val view: LoginContract.View) : LoginContract.Faceb
 
     override fun start(activity: FragmentActivity?) {
         this.activity = activity
-        callbackManager  = CallbackManager.Factory.create()
+        callbackManager  = com.facebook.CallbackManager.Factory.create()
         registerFacebookCallback(callbackManager)
     }
 
@@ -71,9 +75,11 @@ class LoginFacebookPresenter(val view: LoginContract.View) : LoginContract.Faceb
         graphRequest.executeAsync()
     }
 
-    private fun buildSocialUser(jsonObject: JSONObject?) : SocialUser{
+    private fun buildSocialUser(jsonObject: JSONObject?) : SocialUser {
+        Log.d("BBBBBBBBBBb",jsonObject.toString())
         val user: SocialUser = SocialUser(jsonObject?.getString("id"),
-                jsonObject?.getString("name"), jsonObject?.getString("email"), Uri.parse(userPicture(jsonObject?.getString("id"))))
+                jsonObject?.getString("name"), jsonObject?.getString("email"),
+                Uri.parse(userPicture(jsonObject?.getString("id"))))
         return user
     }
 
