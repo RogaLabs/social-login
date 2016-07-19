@@ -80,12 +80,6 @@ task addGoogleServirceJsonFile(type: Copy) {
         from(newFile) {
             destinationDir = newFile
         }
-    }else{
-        def newFile = new File("${appModuleLibFolder}${googleServicesJson}")
-
-        from(newFile) {
-            destinationDir = newFile
-        }
     }
 }
 
