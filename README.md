@@ -121,7 +121,10 @@ loginWithFacebook(new Callback() {
                     }
                 });
 ```
-                
+
+## Sample
+
+[Sample](https://github.com/RogaLabs/sample-social-login)
 
 ## License
 [License](LICENSE)
