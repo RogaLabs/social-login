@@ -2,6 +2,8 @@
 Very simple implementaion for social login on android
 
 [![](https://jitpack.io/v/RogaLabs/social-login.svg)](https://jitpack.io/#RogaLabs/social-login)
+[![AndroidArsenal](https://img.shields.io/badge/Android%20Arsenal-SocialLogin-green.svg?style=true)](https://android-arsenal.com/details/1/3987)
+
 
 ## Install 
 
