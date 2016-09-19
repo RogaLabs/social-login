@@ -20,12 +20,9 @@ open class LoginView : AppCompatActivity(), LoginContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectPresenter(LoginGooglePresenter(this), LoginFacebookPresenter(this))
-    }
 
-    override fun onStart() {
-        super.onStart()
-        googlePresenter?.start(this)
-        facebookPresenter?.start(this)
+        googlePresenter?.create(this)
+        facebookPresenter?.create(this)
     }
 
     override fun onPause() {

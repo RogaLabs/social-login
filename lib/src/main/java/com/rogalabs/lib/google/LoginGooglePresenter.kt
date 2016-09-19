@@ -26,17 +26,23 @@ class LoginGooglePresenter(val view: LoginContract.View?) : GooglePresenter, Goo
         private val RC_SIGN_IN = 200
     }
 
-    override fun start(activity: FragmentActivity?) {
+    override fun create(activity: FragmentActivity?) {
         this.activity = activity
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
-        mGoogleApiClient = GoogleApiClient.Builder(activity?.applicationContext!!).enableAutoManage(activity!! /* FragmentActivity */, this /* OnConnectionFailedListener */).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build()
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build()
+
+        mGoogleApiClient = GoogleApiClient.Builder(activity?.applicationContext!!)
+                .enableAutoManage(activity!! /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build()
     }
 
     override fun pause() {
-        mGoogleApiClient?.stopAutoManage(this.activity!!)
     }
 
     override fun destroy() {
+        mGoogleApiClient?.stopAutoManage(this.activity!!)
         mGoogleApiClient?.disconnect()
     }
 
@@ -53,7 +59,7 @@ class LoginGooglePresenter(val view: LoginContract.View?) : GooglePresenter, Goo
             val user = SocialUser(acct?.id, acct?.displayName, acct?.email, acct?.photoUrl.toString(), acct?.idToken)
             callback?.onSuccess(user)
         } else {
-            callback?.onError(LoginGoogleException("Problem on google login!"))
+            callback?.onError(LoginGoogleException("Google login not succeed!"))
         }
     }
 
@@ -64,7 +70,10 @@ class LoginGooglePresenter(val view: LoginContract.View?) : GooglePresenter, Goo
     }
 
     override fun signOut() {
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient)
+        if (mGoogleApiClient?.isConnected!!) {
+            Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient)
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient)
+        }
     }
 
     override fun onConnectionFailed(connectionResult: ConnectionResult) {

@@ -27,14 +27,13 @@ class LoginFacebookPresenter(val view: LoginContract.View) : LoginContract.Faceb
         callbackManager?.onActivityResult(requestCode, resultCode, data)
     }
 
-    override fun start(activity: FragmentActivity?) {
+    override fun create(activity: FragmentActivity?) {
         this.activity = activity
         callbackManager = com.facebook.CallbackManager.Factory.create()
         registerFacebookCallback(callbackManager)
     }
 
     override fun pause() {
-
     }
 
     override fun destroy() {
