@@ -10,3 +10,5 @@
 app/
 lib/.gitignore
 lib/src/androidTest
+lib/build
+lib/google-services.json

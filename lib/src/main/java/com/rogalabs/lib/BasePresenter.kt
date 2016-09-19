@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity
  */
 interface BasePresenter {
     fun start(activity: FragmentActivity?)
+    fun pause()
     fun destroy()
-    fun activityResult(requestCode: Int , resultCode: Int, data: Intent)
+    fun activityResult(requestCode: Int, resultCode: Int, data: Intent)
 }

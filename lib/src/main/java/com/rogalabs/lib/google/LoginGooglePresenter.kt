@@ -32,8 +32,11 @@ class LoginGooglePresenter(val view: LoginContract.View?) : GooglePresenter, Goo
         mGoogleApiClient = GoogleApiClient.Builder(activity?.applicationContext!!).enableAutoManage(activity!! /* FragmentActivity */, this /* OnConnectionFailedListener */).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build()
     }
 
-    override fun destroy() {
+    override fun pause() {
         mGoogleApiClient?.stopAutoManage(this.activity!!)
+    }
+
+    override fun destroy() {
         mGoogleApiClient?.disconnect()
     }
 
@@ -44,10 +47,10 @@ class LoginGooglePresenter(val view: LoginContract.View?) : GooglePresenter, Goo
         }
     }
 
-    private fun  handleSignInResult(result: GoogleSignInResult?) {
+    private fun handleSignInResult(result: GoogleSignInResult?) {
         if (result?.isSuccess!!) {
             val acct = result?.signInAccount
-            val user = SocialUser(acct?.id, acct?.displayName, acct?.email, acct?.photoUrl.toString() , acct?.idToken)
+            val user = SocialUser(acct?.id, acct?.displayName, acct?.email, acct?.photoUrl.toString(), acct?.idToken)
             callback?.onSuccess(user)
         } else {
             callback?.onError(LoginGoogleException("Problem on google login!"))

@@ -4,26 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.widget.FrameLayout
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.login.LoginManager
-import com.facebook.login.LoginResult
-import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.auth.api.signin.GoogleSignInResult
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.api.GoogleApiClient
 import com.rogalabs.lib.facebook.LoginFacebookPresenter
 import com.rogalabs.lib.google.LoginGooglePresenter
-import java.util.*
 
 /**
  * Created by roga on 05/07/16.
  */
-open class LoginView : AppCompatActivity(),  LoginContract.View {
+open class LoginView : AppCompatActivity(), LoginContract.View {
 
     private var mainLayout: FrameLayout? = null
     private var googlePresenter: LoginContract.GooglePresenter? = null
@@ -38,6 +26,11 @@ open class LoginView : AppCompatActivity(),  LoginContract.View {
         super.onStart()
         googlePresenter?.start(this)
         facebookPresenter?.start(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        googlePresenter?.pause()
     }
 
     override fun onDestroy() {
@@ -60,7 +53,7 @@ open class LoginView : AppCompatActivity(),  LoginContract.View {
     }
 
     override fun injectPresenter(googlePresenter: LoginGooglePresenter, facebookPresenter: LoginFacebookPresenter) {
-        this.googlePresenter   = googlePresenter
+        this.googlePresenter = googlePresenter
         this.facebookPresenter = facebookPresenter
     }
 
