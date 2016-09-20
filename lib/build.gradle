@@ -1,10 +1,10 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.github.dcendents.android-maven'
 
 group = "com.github.RogaLabs"
+ext.kotlin_version = project.KOTLIN_VERSION
 
 android {
     compileSdkVersion 24
@@ -28,30 +28,18 @@ android {
 }
 
 dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.google.android.gms:play-services-auth:9.0.0'
+    compile 'com.google.android.gms:play-services-auth:9.4.0'
     compile 'com.facebook.android:facebook-android-sdk:4.+'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
+apply plugin: 'com.google.gms.google-services'
 
-buildscript {
-    ext.kotlin_version = '1.0.1-2'
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-repositories {
-    mavenCentral()
-}
-
-
-import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
 
 def appModuleLibFolder = './lib/'
 def appDir = '../app'

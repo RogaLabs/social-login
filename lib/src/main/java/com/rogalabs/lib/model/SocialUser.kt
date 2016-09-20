@@ -1,4 +1,4 @@
-package com.rogalabs.lib;
+package com.rogalabs.lib.model;
 
 import java.io.Serializable
 
