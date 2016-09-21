@@ -2,7 +2,6 @@ package com.rogalabs.lib
 
 import com.rogalabs.lib.facebook.LoginFacebookPresenter
 import com.rogalabs.lib.google.LoginGooglePresenter
-import java.util.*
 
 /**
  * Created by roga on 13/07/16.
@@ -27,6 +26,6 @@ interface LoginContract {
     }
 
     interface CommonLoginPresenter : BasePresenter {
-        fun signIn(url: String, params: HashMap<String, String>, callback: CommonCallback)
+        fun signIn(url: String, params: Map<String, String>, callback: CommonCallback)
     }
 }

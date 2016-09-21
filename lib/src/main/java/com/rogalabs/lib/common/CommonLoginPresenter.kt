@@ -6,7 +6,6 @@ import com.rogalabs.lib.CommonCallback
 import com.rogalabs.lib.LoginContract
 import com.rogalabs.lib.server.ResponseHandler
 import com.rogalabs.lib.server.restclient.CommonLoginClient
-import java.util.*
 
 /**
  * Created by cleylsonsouza on 20/09/16.
@@ -30,7 +29,7 @@ class CommonLoginPresenter(val view: LoginContract.View?) : LoginContract.Common
     override fun activityResult(requestCode: Int, resultCode: Int, data: Intent) {
     }
 
-    override fun signIn(url: String, params: HashMap<String, String>, callback: CommonCallback) {
+    override fun signIn(url: String, params: Map<String, String>, callback: CommonCallback) {
         this.callback = callback
         CommonLoginClient.getInstance(activity).createPOST(url, params, null,
                 { result ->

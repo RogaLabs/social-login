@@ -8,7 +8,6 @@ import android.widget.FrameLayout
 import com.rogalabs.lib.common.CommonLoginPresenter
 import com.rogalabs.lib.facebook.LoginFacebookPresenter
 import com.rogalabs.lib.google.LoginGooglePresenter
-import java.util.*
 
 /**
  * Created by roga on 05/07/16.
@@ -85,7 +84,7 @@ open class LoginView : AppCompatActivity(), LoginContract.View {
         facebookPresenter?.signOut()
     }
 
-    protected fun loginWithCommonCredentials(url: String, params: HashMap<String, String>, callback: CommonCallback) {
+    protected fun loginWithCommonCredentials(url: String, params: Map<String, String>, callback: CommonCallback) {
         commonLoginPresenter?.signIn(url, params, callback)
     }
 }
