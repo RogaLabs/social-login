@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
 import android.widget.FrameLayout
+import com.rogalabs.lib.common.CommonLoginPresenter
 import com.rogalabs.lib.facebook.LoginFacebookPresenter
 import com.rogalabs.lib.google.LoginGooglePresenter
+import org.json.JSONObject
 
 /**
  * Created by roga on 05/07/16.
@@ -16,13 +18,17 @@ open class LoginView : AppCompatActivity(), LoginContract.View {
     private var mainLayout: FrameLayout? = null
     private var googlePresenter: LoginContract.GooglePresenter? = null
     private var facebookPresenter: LoginContract.FacebookPresenter? = null
+    private var commonLoginPresenter: LoginContract.CommonLoginPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        injectPresenter(LoginGooglePresenter(this), LoginFacebookPresenter(this))
+        injectPresenter(LoginGooglePresenter(this),
+                LoginFacebookPresenter(this),
+                CommonLoginPresenter(this))
 
         googlePresenter?.create(this)
         facebookPresenter?.create(this)
+        commonLoginPresenter?.create(this)
     }
 
     override fun onPause() {
@@ -49,11 +55,13 @@ open class LoginView : AppCompatActivity(), LoginContract.View {
         facebookPresenter?.activityResult(requestCode, resultCode, data)
     }
 
-    override fun injectPresenter(googlePresenter: LoginGooglePresenter, facebookPresenter: LoginFacebookPresenter) {
+    override fun injectPresenter(googlePresenter: LoginGooglePresenter,
+                                 facebookPresenter: LoginFacebookPresenter,
+                                 commonLoginPresenter: LoginContract.CommonLoginPresenter) {
         this.googlePresenter = googlePresenter
         this.facebookPresenter = facebookPresenter
+        this.commonLoginPresenter = commonLoginPresenter
     }
-
 
     override fun hideProgress() {
     }
@@ -75,5 +83,9 @@ open class LoginView : AppCompatActivity(), LoginContract.View {
 
     protected fun logoffWithFacebook() {
         facebookPresenter?.signOut()
+    }
+
+    protected fun loginWithCommonCredentials(url: String, params: JSONObject, callback: CommonCallback) {
+        commonLoginPresenter?.signIn(url, params, callback)
     }
 }

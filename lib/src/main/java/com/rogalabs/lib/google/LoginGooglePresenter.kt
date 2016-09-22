@@ -10,7 +10,7 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.rogalabs.lib.Callback
 import com.rogalabs.lib.LoginContract
 import com.rogalabs.lib.LoginContract.GooglePresenter
-import com.rogalabs.lib.SocialUser
+import com.rogalabs.lib.model.SocialUser
 
 /**
  * Created by roga on 13/07/16.

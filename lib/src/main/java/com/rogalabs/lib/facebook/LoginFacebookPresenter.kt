@@ -8,7 +8,7 @@ import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.rogalabs.lib.Callback
 import com.rogalabs.lib.LoginContract
-import com.rogalabs.lib.SocialUser
+import com.rogalabs.lib.model.SocialUser
 import org.json.JSONObject
 import java.util.*
 
