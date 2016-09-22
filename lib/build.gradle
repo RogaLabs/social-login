@@ -31,7 +31,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.google.android.gms:play-services-auth:9.4.0'
+    compile 'com.google.android.gms:play-services-auth:9.6.0'
     compile 'com.facebook.android:facebook-android-sdk:4.+'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
