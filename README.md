@@ -124,6 +124,21 @@ loginWithFacebook(new Callback() {
                 });
 ```
 
+Also, you can make a request with your own endpoint and params:
+```java
+loginWithCommonCredentials(yourEndpoint, jsonParams, new CommonCallback() {
+                @Override
+                public void onSuccess(@NotNull JSONObject success) {
+                    Log.i(TAG, "onSuccess: " + success);
+                }
+
+                @Override
+                public void onError(@NotNull ResponseHandler.ErrorHandler error) {
+                    Log.e(TAG, "onError: " + error.getCode() + " - " + error.getMessage());
+                }
+            });
+```
+
 ## Sample
 
 [Sample](https://github.com/RogaLabs/sample-social-login)
