@@ -10,7 +10,7 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.rogalabs.lib.Callback
 import com.rogalabs.lib.LoginContract
 import com.rogalabs.lib.LoginContract.GooglePresenter
-import com.rogalabs.lib.SocialUser
+import com.rogalabs.lib.model.SocialUser
 
 /**
  * Created by roga on 13/07/16.
@@ -26,10 +26,19 @@ class LoginGooglePresenter(val view: LoginContract.View?) : GooglePresenter, Goo
         private val RC_SIGN_IN = 200
     }
 
-    override fun start(activity: FragmentActivity?) {
+    override fun create(activity: FragmentActivity?) {
         this.activity = activity
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
-        mGoogleApiClient = GoogleApiClient.Builder(activity?.applicationContext!!).enableAutoManage(activity!! /* FragmentActivity */, this /* OnConnectionFailedListener */).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build()
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build()
+
+        mGoogleApiClient = GoogleApiClient.Builder(activity?.applicationContext!!)
+                .enableAutoManage(activity!! /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build()
+    }
+
+    override fun pause() {
     }
 
     override fun destroy() {
@@ -44,13 +53,13 @@ class LoginGooglePresenter(val view: LoginContract.View?) : GooglePresenter, Goo
         }
     }
 
-    private fun  handleSignInResult(result: GoogleSignInResult?) {
+    private fun handleSignInResult(result: GoogleSignInResult?) {
         if (result?.isSuccess!!) {
             val acct = result?.signInAccount
-            val user = SocialUser(acct?.id, acct?.displayName, acct?.email, acct?.photoUrl.toString() , acct?.idToken)
+            val user = SocialUser(acct?.id, acct?.displayName, acct?.email, acct?.photoUrl.toString(), acct?.idToken)
             callback?.onSuccess(user)
         } else {
-            callback?.onError(LoginGoogleException("Problem on google login!"))
+            callback?.onError(LoginGoogleException("Google login not succeed!"))
         }
     }
 
@@ -61,7 +70,10 @@ class LoginGooglePresenter(val view: LoginContract.View?) : GooglePresenter, Goo
     }
 
     override fun signOut() {
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient)
+        if (mGoogleApiClient?.isConnected!!) {
+            Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient)
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient)
+        }
     }
 
     override fun onConnectionFailed(connectionResult: ConnectionResult) {

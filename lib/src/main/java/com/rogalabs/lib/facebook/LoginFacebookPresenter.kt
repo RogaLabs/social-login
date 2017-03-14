@@ -8,7 +8,7 @@ import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.rogalabs.lib.Callback
 import com.rogalabs.lib.LoginContract
-import com.rogalabs.lib.SocialUser
+import com.rogalabs.lib.model.SocialUser
 import org.json.JSONObject
 import java.util.*
 
@@ -20,23 +20,26 @@ class LoginFacebookPresenter(val view: LoginContract.View) : LoginContract.Faceb
 
     private var callback: Callback? = null
     private var callbackManager: CallbackManager? = null
-    private var activity : FragmentActivity? = null
+    private var activity: FragmentActivity? = null
     private val profileFields = "id, name, email, gender"
 
     override fun activityResult(requestCode: Int, resultCode: Int, data: Intent) {
         callbackManager?.onActivityResult(requestCode, resultCode, data)
     }
 
-    override fun start(activity: FragmentActivity?) {
+    override fun create(activity: FragmentActivity?) {
         this.activity = activity
-        callbackManager  = com.facebook.CallbackManager.Factory.create()
+        callbackManager = com.facebook.CallbackManager.Factory.create()
         registerFacebookCallback(callbackManager)
+    }
+
+    override fun pause() {
     }
 
     override fun destroy() {
     }
 
-    private fun registerFacebookCallback(callbackManager: CallbackManager?){
+    private fun registerFacebookCallback(callbackManager: CallbackManager?) {
         LoginManager.getInstance().registerCallback(callbackManager, this)
     }
 
@@ -67,7 +70,7 @@ class LoginFacebookPresenter(val view: LoginContract.View) : LoginContract.Faceb
         callback?.onSuccess(buildSocialUser(jsonResponse))
     }
 
-    private fun sendGraphRequest(){
+    private fun sendGraphRequest() {
         val graphRequest: GraphRequest = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), this)
 
         val parameters = Bundle()
@@ -76,7 +79,7 @@ class LoginFacebookPresenter(val view: LoginContract.View) : LoginContract.Faceb
         graphRequest.executeAsync()
     }
 
-    private fun buildSocialUser(jsonObject: JSONObject?) : SocialUser {
+    private fun buildSocialUser(jsonObject: JSONObject?): SocialUser {
         val user: SocialUser = SocialUser(jsonObject?.getString("id"),
                 jsonObject?.getString("name"), jsonObject?.getString("email"),
                 userPicture(jsonObject?.getString("id")),

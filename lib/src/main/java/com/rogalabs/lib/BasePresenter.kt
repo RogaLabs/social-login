@@ -7,7 +7,8 @@ import android.support.v4.app.FragmentActivity
  * Created by roga on 13/07/16.
  */
 interface BasePresenter {
-    fun start(activity: FragmentActivity?)
+    fun create(activity: FragmentActivity?)
+    fun pause()
     fun destroy()
-    fun activityResult(requestCode: Int , resultCode: Int, data: Intent)
+    fun activityResult(requestCode: Int, resultCode: Int, data: Intent)
 }
