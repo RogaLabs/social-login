@@ -18,8 +18,8 @@ public class ResponseHandler {
 
     public ErrorHandler errorHandler(VolleyError volleyError) {
         ErrorHandler error = new ErrorHandler();
-        Integer code = volleyError.networkResponse.statusCode;
         try {
+            Integer code = volleyError.networkResponse.statusCode;
             error.setCode(code);
             if (code.equals(RESPONSE_STATUS_404)
                     || code.equals(RESPONSE_STATUS_422)
