@@ -8,6 +8,7 @@ import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.rogalabs.lib.Callback
 import com.rogalabs.lib.LoginContract
+import com.rogalabs.lib.model.Hometown
 import com.rogalabs.lib.model.SocialUser
 import org.json.JSONObject
 import java.util.*
@@ -21,7 +22,7 @@ class LoginFacebookPresenter(val view: LoginContract.View) : LoginContract.Faceb
     private var callback: Callback? = null
     private var callbackManager: CallbackManager? = null
     private var activity: FragmentActivity? = null
-    private val profileFields = "id, name, email, gender"
+    private val profileFields = "id, name, email, gender, birthday, hometown"
 
     override fun activityResult(requestCode: Int, resultCode: Int, data: Intent) {
         callbackManager?.onActivityResult(requestCode, resultCode, data)
@@ -59,7 +60,9 @@ class LoginFacebookPresenter(val view: LoginContract.View) : LoginContract.Faceb
         this.callback = callback
         LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("public_profile",
                 "user_friends",
-                "email"))
+                "email",
+                "user_birthday",
+                "user_hometown"))
     }
 
     override fun signOut() {
@@ -80,10 +83,12 @@ class LoginFacebookPresenter(val view: LoginContract.View) : LoginContract.Faceb
     }
 
     private fun buildSocialUser(jsonObject: JSONObject?): SocialUser {
+        val hometownObj = jsonObject?.getJSONObject("hometown")
+        val hometown: Hometown = Hometown(hometownObj?.getString("id"), hometownObj?.getString("name"))
         val user: SocialUser = SocialUser(jsonObject?.getString("id"),
                 jsonObject?.getString("name"), jsonObject?.getString("email"),
-                userPicture(jsonObject?.getString("id")),
-                AccessToken.getCurrentAccessToken().token)
+                jsonObject?.getString("birthday"), userPicture(jsonObject?.getString("id")),
+                hometown, AccessToken.getCurrentAccessToken().token)
         return user
     }
 
