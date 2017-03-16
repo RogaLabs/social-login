@@ -38,41 +38,39 @@ dependencies {
 
 apply plugin: 'com.google.gms.google-services'
 
-import groovy.json.JsonOutput
-import groovy.json.JsonSlurper
-
-def appModuleLibFolder = './lib/'
-def appDir = '../app'
-def googleServicesJson = 'google-services.json'
-def packageName = 'com.rogalabs.lib'
-
-task addGoogleServirceJsonFile(type: Copy) {
-
-    description = 'get your google service json file'
-
-    def jsonSlurper = new JsonSlurper()
-    def googleJson = file("${appDir}/${googleServicesJson}")
-
-    if (googleJson.exists()) {
-
-        def object = jsonSlurper.parseText(googleJson.text)
-
-        assert object instanceof Map
-        object.client[0].client_info.android_client_info.package_name = "${packageName}"
-        object.client[0].oauth_client[0].android_info.package_name = "${packageName}"
-
-        def output = JsonOutput.toJson(object)
-        def newFile = new File("${appModuleLibFolder}${googleServicesJson}")
-        newFile.write(output)
-
-        from(newFile) {
-            destinationDir = newFile
-        }
-    }
-}
-
-
-afterEvaluate {
-    processDebugGoogleServices.dependsOn addGoogleServirceJsonFile
-    processReleaseGoogleServices.dependsOn addGoogleServirceJsonFile
-}
+//import groovy.json.JsonOutput
+//import groovy.json.JsonSlurper
+//
+//def appModuleLibFolder = './lib/'
+//def appDir = '../app'
+//def googleServicesJson = 'google-services.json'
+//def packageName = 'com.rogalabs.lib'
+//
+//task addGoogleServirceJsonFile(type: Copy) {
+//
+//    description = 'get your google service json file'
+//
+//    def jsonSlurper = new JsonSlurper()
+//    def googleJson = file("${appDir}/${googleServicesJson}")
+//
+//    if (googleJson.exists()) {
+//
+//        def object = jsonSlurper.parseText(googleJson.text)
+//
+//        assert object instanceof Map
+//        object.client[0].client_info.android_client_info.package_name = "${packageName}"
+//        object.client[0].oauth_client[0].android_info.package_name = "${packageName}"
+//
+//        def output = JsonOutput.toJson(object)
+//        def newFile = new File("${appModuleLibFolder}${googleServicesJson}")
+//        newFile.write(output)
+//
+//        from(newFile) {
+//            destinationDir = newFile
+//        }
+//    }
+//}
+//afterEvaluate {
+//    processDebugGoogleServices.dependsOn addGoogleServirceJsonFile
+//    processReleaseGoogleServices.dependsOn addGoogleServirceJsonFile
+//}
