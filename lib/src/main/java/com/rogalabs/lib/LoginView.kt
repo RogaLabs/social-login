@@ -81,6 +81,10 @@ open class LoginView : AppCompatActivity(), LoginContract.View {
         facebookPresenter?.signIn(callback)
     }
 
+    protected fun loginWithFacebook(callback: Callback, readPermissions: List<String>) {
+        facebookPresenter?.signIn(callback, readPermissions)
+    }
+
     protected fun logoffWithFacebook() {
         facebookPresenter?.signOut()
     }
