@@ -1,7 +1,11 @@
 package com.rogalabs.lib.google
 
 import android.content.Intent
+import android.os.AsyncTask
 import android.support.v4.app.FragmentActivity
+import com.facebook.FacebookSdk.getApplicationContext
+import com.google.android.gms.auth.GoogleAuthException
+import com.google.android.gms.auth.GoogleAuthUtil
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInResult
@@ -13,6 +17,8 @@ import com.rogalabs.lib.LoginContract.GooglePresenter
 import com.rogalabs.lib.R
 import com.rogalabs.lib.model.Hometown
 import com.rogalabs.lib.model.SocialUser
+import java.io.IOException
+
 
 /**
  * Created by roga on 13/07/16.
@@ -60,10 +66,32 @@ class LoginGooglePresenter(val view: LoginContract.View?) : GooglePresenter, Goo
         if (result?.isSuccess!!) {
             val acct = result.signInAccount
 
-            val hometown = Hometown()
-            val user = SocialUser(acct?.id, acct?.displayName, acct?.email,
-                    "", acct?.photoUrl.toString(), hometown, acct?.idToken)
-            callback?.onSuccess(user)
+            val task = object : AsyncTask<Void, Void, String>() {
+                override fun doInBackground(vararg params: Void): String {
+                    val SCOPES: String = "oauth2:profile email"
+                    var token: String = ""
+                    try {
+                        token = GoogleAuthUtil.getToken(
+                                getApplicationContext(),
+                                acct?.account,
+                                SCOPES)
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    } catch (e: GoogleAuthException) {
+                        e.printStackTrace()
+                    }
+
+                    return token
+                }
+
+                override fun onPostExecute(token: String) {
+                    val hometown = Hometown()
+                    val user = SocialUser(acct?.id, acct?.displayName, acct?.email,
+                            "", acct?.photoUrl.toString(), hometown, token)
+                    callback?.onSuccess(user)
+                }
+            }
+            task.execute()
         } else {
             callback?.onError(LoginGoogleException("Google login not succeed!"))
         }
