@@ -8,6 +8,7 @@ import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.rogalabs.lib.Callback
 import com.rogalabs.lib.LoginContract
+import com.rogalabs.lib.model.Hometown
 import com.rogalabs.lib.model.SocialUser
 import org.json.JSONObject
 import java.util.*
@@ -21,7 +22,7 @@ class LoginFacebookPresenter(val view: LoginContract.View) : LoginContract.Faceb
     private var callback: Callback? = null
     private var callbackManager: CallbackManager? = null
     private var activity: FragmentActivity? = null
-    private val profileFields = "id, name, email, gender"
+    private val profileFields = "id, name, email, birthday, hometown"
 
     override fun activityResult(requestCode: Int, resultCode: Int, data: Intent) {
         callbackManager?.onActivityResult(requestCode, resultCode, data)
@@ -57,9 +58,17 @@ class LoginFacebookPresenter(val view: LoginContract.View) : LoginContract.Faceb
 
     override fun signIn(callback: Callback) {
         this.callback = callback
-        LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("public_profile",
-                "user_friends",
-                "email"))
+        LoginManager.getInstance().logInWithReadPermissions(activity,
+                Arrays.asList(
+                        "public_profile",
+                        "email",
+                        "user_birthday",
+                        "user_hometown"))
+    }
+
+    override fun signIn(callback: Callback, readPermissions: List<String>) {
+        this.callback = callback
+        LoginManager.getInstance().logInWithReadPermissions(activity, readPermissions)
     }
 
     override fun signOut() {
@@ -80,11 +89,19 @@ class LoginFacebookPresenter(val view: LoginContract.View) : LoginContract.Faceb
     }
 
     private fun buildSocialUser(jsonObject: JSONObject?): SocialUser {
-        val user: SocialUser = SocialUser(jsonObject?.getString("id"),
-                jsonObject?.getString("name"), jsonObject?.getString("email"),
-                userPicture(jsonObject?.getString("id")),
-                AccessToken.getCurrentAccessToken().token)
-        return user
+        var hometown: Hometown = Hometown()
+        var birthday: String = ""
+        try {
+            val hometownObj = jsonObject?.getJSONObject("hometown")
+            birthday = jsonObject?.getString("birthday") as String
+            hometown = Hometown(hometownObj?.getString("id"), hometownObj?.getString("name"))
+        } finally {
+            val user: SocialUser = SocialUser(jsonObject?.getString("id"),
+                    jsonObject?.getString("name"), jsonObject?.getString("email"),
+                    birthday, userPicture(jsonObject?.getString("id")),
+                    hometown, AccessToken.getCurrentAccessToken().token)
+            return user
+        }
     }
 
     private fun userPicture(id: String?): String {

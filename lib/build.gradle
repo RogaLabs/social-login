@@ -8,13 +8,13 @@ ext.kotlin_version = project.KOTLIN_VERSION
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
 
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
-        versionName "1.0"
+        versionName "1.2.2"
     }
     buildTypes {
         release {
@@ -30,49 +30,10 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.google.android.gms:play-services-auth:10.2.0'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.google.android.gms:play-services-auth:10.2.6'
     compile 'com.facebook.android:facebook-android-sdk:4.0.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 apply plugin: 'com.google.gms.google-services'
-
-import groovy.json.JsonOutput
-import groovy.json.JsonSlurper
-
-def appModuleLibFolder = './lib/'
-def appDir = '../app'
-def googleServicesJson = 'google-services.json'
-def packageName = 'com.rogalabs.lib'
-
-task addGoogleServirceJsonFile(type: Copy) {
-
-    description = 'get your google service json file'
-
-    def jsonSlurper = new JsonSlurper()
-    def googleJson = file("${appDir}/${googleServicesJson}")
-
-    if (googleJson.exists()) {
-
-        def object = jsonSlurper.parseText(googleJson.text)
-
-        assert object instanceof Map
-        object.client[0].client_info.android_client_info.package_name = "${packageName}"
-        object.client[0].oauth_client[0].android_info.package_name = "${packageName}"
-
-        def output = JsonOutput.toJson(object)
-        def newFile = new File("${appModuleLibFolder}${googleServicesJson}")
-        newFile.write(output)
-
-        from(newFile) {
-            destinationDir = newFile
-        }
-    }
-}
-
-
-afterEvaluate {
-    processDebugGoogleServices.dependsOn addGoogleServirceJsonFile
-    processReleaseGoogleServices.dependsOn addGoogleServirceJsonFile
-}

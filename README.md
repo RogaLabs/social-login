@@ -122,6 +122,20 @@ loginWithFacebook(new Callback() {
                         throwable.printStackTrace();
                     }
                 });
+
+// or setting your desired permissions...
+String[] permissions = {"public_profile", "email"};
+loginWithFacebook(new Callback() {
+                    @Override
+                    public void onSuccess(SocialUser socialUser) {
+                        buildProfileDialog(socialUser);
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                }, Arrays.asList(permissions));
 ```
 
 Also, you can make a request with your own endpoint and params:

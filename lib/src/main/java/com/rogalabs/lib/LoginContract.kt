@@ -23,6 +23,7 @@ interface LoginContract {
 
     interface FacebookPresenter : BasePresenter {
         fun signIn(callback: Callback)
+        fun signIn(callback: Callback, readPermissions: List<String>)
         fun signOut()
     }
 

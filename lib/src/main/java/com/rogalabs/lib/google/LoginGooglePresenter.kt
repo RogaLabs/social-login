@@ -10,6 +10,8 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.rogalabs.lib.Callback
 import com.rogalabs.lib.LoginContract
 import com.rogalabs.lib.LoginContract.GooglePresenter
+import com.rogalabs.lib.R
+import com.rogalabs.lib.model.Hometown
 import com.rogalabs.lib.model.SocialUser
 
 /**
@@ -29,11 +31,12 @@ class LoginGooglePresenter(val view: LoginContract.View?) : GooglePresenter, Goo
     override fun create(activity: FragmentActivity?) {
         this.activity = activity
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(activity?.getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build()
 
         mGoogleApiClient = GoogleApiClient.Builder(activity?.applicationContext!!)
-                .enableAutoManage(activity!! /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .enableAutoManage(activity /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build()
     }
@@ -55,8 +58,11 @@ class LoginGooglePresenter(val view: LoginContract.View?) : GooglePresenter, Goo
 
     private fun handleSignInResult(result: GoogleSignInResult?) {
         if (result?.isSuccess!!) {
-            val acct = result?.signInAccount
-            val user = SocialUser(acct?.id, acct?.displayName, acct?.email, acct?.photoUrl.toString(), acct?.idToken)
+            val acct = result.signInAccount
+
+            val hometown = Hometown()
+            val user = SocialUser(acct?.id, acct?.displayName, acct?.email,
+                    "", acct?.photoUrl.toString(), hometown, acct?.idToken)
             callback?.onSuccess(user)
         } else {
             callback?.onError(LoginGoogleException("Google login not succeed!"))

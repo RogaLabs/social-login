@@ -8,6 +8,7 @@
 /build
 /captures
 app/
+sociallogin/
 lib/.gitignore
 lib/src/androidTest
 lib/build
